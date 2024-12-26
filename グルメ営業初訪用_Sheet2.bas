@@ -1,65 +1,59 @@
-VERSION 1.0 CLASS
-BEGIN
-  MultiUse = -1  'True
-END
-Attribute VB_Name = "Sheet2"
-Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = True
-Attribute VB_Exposed = True
+##å…¨ä½“ã¸ã®ã‚³ãƒ¡ãƒ³ãƒˆ
+TL, HP, Instagramã®URLãŒãªã„ã¨ãã«ã‚¨ãƒ©ãƒ¼ã«ãªã‚‹ã®ã§ã€ã‚¹ã‚­ãƒƒãƒ—å‡¦ç†ã‚’å…¥ã‚Œã¦ãã ã•ã„ã€‚
+
 Sub eigyousiryou()
 
 myrro = 0
-Num = Range("A3")  'ŒJ‚è•Ô‚·“X•Ü”
-waitTime = Range("B3")  '‘Ò‚¿ŠÔ‚Ìw’è
+Num = Range("A3")  'ç¹°ã‚Šè¿”ã™åº—èˆ—æ•°
+waitTime = Range("B3")  'å¾…ã¡æ™‚é–“ã®æŒ‡å®š
 
-'chrome‚ğ‹N“®‚·‚é
+'chromeã‚’èµ·å‹•ã™ã‚‹
 Dim Driver As New ChromeDriver
     
 Do While myrro < Num
 
-    'H‚×ƒƒO‚©‚çî•ñ‚ğæ‚Á‚Ä‚­‚é
-    Driver.Get Range("D6").Offset(0, myrro) 'ŠJ‚­URL‚ÌQÆŒ³
+    'é£Ÿã¹ãƒ­ã‚°ã‹ã‚‰æƒ…å ±ã‚’å–ã£ã¦ãã‚‹
+    Driver.Get Range("D6").Offset(0, myrro) 'é–‹ãURLã®å‚ç…§å…ƒ
     Application.Wait Now + waitTime
     
-    '“X•Üî•ñiÚ×j‚ğ’²¸
+    'åº—èˆ—æƒ…å ±ï¼ˆè©³ç´°ï¼‰ã‚’èª¿æŸ»
     Set obj0 = Driver.FindElementById("rst-data-head").FindElementsByTag("tr")
         For Each obj In obj0
-            If obj.FindElementsByTag("th")(1).Text = "ƒWƒƒƒ“ƒ‹" Then
+            If obj.FindElementsByTag("th")(1).Text = "ã‚¸ãƒ£ãƒ³ãƒ«" Then
                 Range("D9").Offset(0, myrro) = obj.FindElementsByTag("td")(1).Text
-            ElseIf obj.FindElementsByTag("th")(1).Text = "È”" Then
+            ElseIf obj.FindElementsByTag("th")(1).Text = "å¸­æ•°" Then
                 Range("D10").Offset(0, myrro) = obj.FindElementsByTag("td")(1).FindElementsByTag("p")(1).Text
-            ElseIf obj.FindElementsByTag("th")(1).Text = "—\Z" Then
+            ElseIf obj.FindElementsByTag("th")(1).Text = "äºˆç®—" Then
                 Range("D11").Offset(0, myrro) = obj.FindElementsByTag("td")(1).FindElementsByTag("em")(1).Text
-            ElseIf obj.FindElementsByTag("th")(1).Text = "ŒÂº" Then
+            ElseIf obj.FindElementsByTag("th")(1).Text = "å€‹å®¤" Then
                 Range("D12").Offset(0, myrro) = obj.FindElementsByTag("td")(1).FindElementsByTag("p")(1).Text
-            ElseIf obj.FindElementsByTag("th")(1).Text = "‘İØ" Then
+            ElseIf obj.FindElementsByTag("th")(1).Text = "è²¸åˆ‡" Then
                 Range("D13").Offset(0, myrro) = obj.FindElementsByTag("td")(1).FindElementsByTag("p")(1).Text
             End If
             
-            'H‚×ƒƒO‚Ìƒvƒ‰ƒ“
+            'é£Ÿã¹ãƒ­ã‚°ã®ãƒ—ãƒ©ãƒ³
             TLplan = Driver.FindElementsByTag("html")(1).Attribute("innerHTML")
             prop15 = InStr(TLplan, "s.prop15")
             plan15 = Mid(TLplan, prop15 + 12, 3)
             Range("D19").Offset(0, myrro) = Replace(Replace(plan15, """", ""), ";", "")
         Next
     
-    'H‚×ƒƒO‚Ì“_”
+    'é£Ÿã¹ãƒ­ã‚°ã®ç‚¹æ•°
     If Driver.FindElementsByClass("rdheader-rating__score-val-dtl").Count > 0 Then
         Range("D21").Offset(0, myrro) = Driver.FindElementsByClass("rdheader-rating__score-val-dtl")(1).Text
     End If
     
-    'ZŠ‚ğæ“¾
+    'ä½æ‰€ã‚’å–å¾—
     If Driver.FindElementsByClass("rstinfo-table__address").Count > 0 Then
         Range("D5").Offset(0, myrro) = Driver.FindElementsByClass("rstinfo-table__address")(1).Text
     End If
 
 
-    'ƒzƒbƒgƒyƒbƒp[‚©‚çî•ñ‚ğæ‚Á‚Ä‚­‚é
-    Driver.Get Range("D7").Offset(0, myrro) 'ŠJ‚­URL‚ÌQÆŒ³
+    'ãƒ›ãƒƒãƒˆãƒšãƒƒãƒ‘ãƒ¼ã‹ã‚‰æƒ…å ±ã‚’å–ã£ã¦ãã‚‹
+    Driver.Get Range("D7").Offset(0, myrro) 'é–‹ãURLã®å‚ç…§å…ƒ
     Application.Wait Now + waitTime
        
-    'ƒzƒbƒgƒyƒbƒp[‚Ìƒvƒ‰ƒ“
+    'ãƒ›ãƒƒãƒˆãƒšãƒƒãƒ‘ãƒ¼ã®ãƒ—ãƒ©ãƒ³
     hpplan0 = Driver.FindElementsByTag("html")(1).Attribute("innerHTML")
     If InStr(hpplan0, "storeDivision") > 0 Then
         hpplan1 = Mid(hpplan0, InStr(hpplan0, "storeDivision") + 16, 4)
@@ -67,23 +61,23 @@ Do While myrro < Num
         Range("D16").Offset(0, myrro) = hpplan2
     End If
     
-    'ƒzƒbƒgƒyƒbƒp[‚Ì‹ÆƒTƒ|’T‚·
-    Driver.Get "https://www.google.com/search?q=" & Range("D3").Offset(0, myrro) & "owst.jp"  '“X–¼‚Éowst.jp‚ğ‚Â‚¯‚ÄŒŸõ‚·‚é
+    'ãƒ›ãƒƒãƒˆãƒšãƒƒãƒ‘ãƒ¼ã®æ¥­ã‚µãƒæ¢ã™
+    Driver.Get "https://www.google.com/search?q=" & Range("D3").Offset(0, myrro) & "owst.jp"  'åº—åã«owst.jpã‚’ã¤ã‘ã¦æ¤œç´¢ã™ã‚‹
     Application.Wait Now + waitTime
     
     all_html = Driver.FindElementsByClass("g")(1).Attribute("innerHTML")
     mid_http = Mid(all_html, InStr(all_html, "http"))
-    final_http = Left(mid_http, InStr(mid_http, """") - 1)  'Å‰ŒŸõŒ‹‰Ê‚ÌURL‚ğæ‚Á‚Ä—ˆ‚é
+    final_http = Left(mid_http, InStr(mid_http, """") - 1)  'æœ€åˆæ¤œç´¢çµæœã®URLã‚’å–ã£ã¦æ¥ã‚‹
     sapourl = final_http
     searchurl = "owst.jp"
     
     If InStr(sapourl, searchurl) > 0 Then
         Range("D18").Offset(0, myrro).Value = sapourl
     Else
-        Range("D18").Offset(0, myrro).Value = "ŠY“–‚È‚µ"
+        Range("D18").Offset(0, myrro).Value = "è©²å½“ãªã—"
     End If
 
-    'GBP‚Ìî•ñ‚ğæ‚Á‚Ä—ˆ‚é
+    'GBPã®æƒ…å ±ã‚’å–ã£ã¦æ¥ã‚‹
     Driver.Get "https://www.google.com/search?tbs=lf:1,lf_ui:9&tbm=lcl&hl&q=" & Range("D3").Offset(0, myrro) & " " & Range("D5").Offset(0, myrro)
     Application.Wait Now + waitTime
     
@@ -97,47 +91,47 @@ Do While myrro < Num
         End If
     Next
     
-        Range("D24").Offset(0, myrro) = Driver.FindElementsByClass("dbg0pd")(j).FindElementByTag("span").Attribute("innerText")  '“X•Ü–¼‚ğæ“¾
-        Range("D25").Offset(0, myrro) = Driver.FindElementsByCss(".yi40Hd.YrbPuc")(j).Attribute("innerText")  '“_”‚ğæ“¾
-        Range("D26").Offset(0, myrro) = Driver.FindElementsByCss(".RDApEe.YrbPuc")(j).Attribute("innerText") * -1  'ŒûƒRƒ~Œ”‚ğæ“¾
+        Range("D24").Offset(0, myrro) = Driver.FindElementsByClass("dbg0pd")(j).FindElementByTag("span").Attribute("innerText")  'åº—èˆ—åã‚’å–å¾—
+        Range("D25").Offset(0, myrro) = Driver.FindElementsByCss(".yi40Hd.YrbPuc")(j).Attribute("innerText")  'ç‚¹æ•°ã‚’å–å¾—
+        Range("D26").Offset(0, myrro) = Driver.FindElementsByCss(".RDApEe.YrbPuc")(j).Attribute("innerText") * -1  'å£ã‚³ãƒŸä»¶æ•°ã‚’å–å¾—
         
-        'V’…‚Ì“Še‚ª‚ ‚é‚©Šm”F
+        'æ–°ç€ã®æŠ•ç¨¿ãŒã‚ã‚‹ã‹ç¢ºèª
         If Driver.FindElementsByClass("o0AaCd").Count > 0 Then
-            Range("D27").Offset(0, myrro) = "Z"
+            Range("D27").Offset(0, myrro) = "ã€‡"
         Else
-            Range("D27").Offset(0, myrro) = "~"
+            Range("D27").Offset(0, myrro) = "Ã—"
         End If
         
-        'ŒûƒRƒ~•ÔM‚ª‚ ‚é‚©Šm”F
+        'å£ã‚³ãƒŸè¿”ä¿¡ãŒã‚ã‚‹ã‹ç¢ºèª
         Driver.FindElementsByCss(".F3Istb.sSWCId")(3).Click
         If Driver.FindElementsByClass("KmCjbd").Count > 0 Then
-            Range("D28").Offset(0, myrro) = "Z"
+            Range("D28").Offset(0, myrro) = "ã€‡"
         Else
-            Range("D28").Offset(0, myrro) = "~"
+            Range("D28").Offset(0, myrro) = "Ã—"
         End If
         
-        'ƒƒjƒ…[“ü—Í‚ª‚ ‚é‚©Šm”F
+        'ãƒ¡ãƒ‹ãƒ¥ãƒ¼å…¥åŠ›ãŒã‚ã‚‹ã‹ç¢ºèª
         Driver.FindElementsByCss(".F3Istb.sSWCId")(2).Click
         If Driver.FindElementsByClass("gq9CCd").Count > 0 Then
-            Range("D29").Offset(0, myrro) = "Z"
+            Range("D29").Offset(0, myrro) = "ã€‡"
         Else
-            Range("D29").Offset(0, myrro) = "~"
+            Range("D29").Offset(0, myrro) = "Ã—"
         End If
 
-    'Instagram‚Ìî•ñ‚ğæ‚Á‚Ä—ˆ‚é
+    'Instagramã®æƒ…å ±ã‚’å–ã£ã¦æ¥ã‚‹
     Driver.Get "https://www.instagram.com/" & Range("D31").Offset(0, myrro)
     Application.Wait Now + waitTime
         
-        'ƒtƒHƒƒ[”‚ğæ“¾
+        'ãƒ•ã‚©ãƒ­ãƒ¯ãƒ¼æ•°ã‚’å–å¾—
         For tabs = 1 To Driver.FindElementsByTag("button").Count
-            If InStr(Driver.FindElementsByTag("button")(tabs).Attribute("innerText"), "ƒtƒHƒƒ[") Then
+            If InStr(Driver.FindElementsByTag("button")(tabs).Attribute("innerText"), "ãƒ•ã‚©ãƒ­ãƒ¯ãƒ¼") Then
                 Range("D32").Offset(0, myrro) = Driver.FindElementsByTag("button")(tabs).FindElementsByTag("span")(1).Attribute("innerText")
             End If
         Next
         
-        'ƒtƒHƒ[’†‚Ì”‚ğæ“¾
+        'ãƒ•ã‚©ãƒ­ãƒ¼ä¸­ã®æ•°ã‚’å–å¾—
         For tabs = 1 To Driver.FindElementsByTag("button").Count
-            If InStr(Driver.FindElementsByTag("button")(tabs).Attribute("innerText"), "ƒtƒHƒ[’†") Then
+            If InStr(Driver.FindElementsByTag("button")(tabs).Attribute("innerText"), "ãƒ•ã‚©ãƒ­ãƒ¼ä¸­") Then
                 Range("D33").Offset(0, myrro) = Driver.FindElementsByTag("button")(tabs).FindElementsByTag("span")(1).Attribute("innerText")
             End If
         Next
@@ -147,7 +141,7 @@ Do While myrro < Num
 myrro = myrro + 1
 Loop
 
-TexBox = "Š®—¹"
+TexBox = "å®Œäº†"
 
 End Sub
 
