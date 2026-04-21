@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C-mo Monthly Report - Story Pattern</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&display=swap');
+        
+        :root {
+            --brand-red: #DE0A0A;
+        }
+
+        body { 
+            font-family: 'M PLUS Rounded 1c', sans-serif; 
+            background-color: #fff5f5; 
+            color: #4a5568; 
+            line-height: 1.6;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; }
+        
+        .story-card {
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(222, 10, 10, 0.05);
+            margin-bottom: 2rem;
+            padding: 2.5rem;
+            border: 2px solid #fff1f1;
+        }
+
+        .step-badge {
+            background-color: var(--brand-red);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 900;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .text-brand { color: var(--brand-red); }
+        .bg-brand { background-color: var(--brand-red); }
+
+        .big-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.05em;
+        }
+
+        .chart-wrapper { position: relative; width: 100%; height: 250px; }
+
+        table { width: 100%; }
+        th { text-align: left; color: #a0aec0; font-size: 0.75rem; padding-bottom: 0.5rem; }
+        td { padding: 1rem 0; border-bottom: 1px solid #edf2f7; font-size: 0.9rem; }
+
+        .icon-circle {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="py-8 px-4">
+
+    <div class="container">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <div class="inline-block px-6 py-2 bg-white rounded-full shadow-sm mb-4 border border-red-50">
+                <span class="text-brand font-black">C-mo</span> <span class="text-gray-400 font-bold ml-2">Monthly Analysis</span>
+            </div>
+            <h1 class="text-3xl font-black text-gray-800 tracking-tighter">先月の集客結果のまとめ</h1>
+        </header>
+
+        <!-- KPI Area -->
+        <div class="story-card text-center border-t-8 border-brand">
+            <p class="text-sm font-bold text-gray-400 mb-2">お店に興味を持ったお客様の数</p>
+            <div class="flex flex-col items-center">
+                <span class="big-number text-brand">59,799 <span class="text-xl">人</span></span>
+                <div class="mt-4 bg-red-50 px-4 py-2 rounded-full flex items-center">
+                    <span class="text-brand font-black text-sm">前月より +8.2% アップ！</span>
+                </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-6 leading-relaxed">
+                ※ホームページやGoogleマップでお店が見られた回数の合計です。
+            </p>
+        </div>
+
+        <!-- Section 1: C-mo Site -->
+        <div class="story-card">
+            <div class="step-badge">STEP 1: お店の魅力を伝える</div>
+            <h2 class="text-xl font-black mb-2">ホームページでの反応</h2>
+            <p class="text-sm text-gray-500 mb-8">ホームページを見て「予約したい」「電話したい」と思った人の推移です。</p>
+            
+            <div class="chart-wrapper mb-8">
+                <canvas id="siteChart"></canvas>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-red-50 p-6 rounded-3xl">
+                    <div class="text-xs font-bold text-brand mb-1">ネット予約ボタン</div>
+                    <div class="text-2xl font-black">458 <span class="text-xs">回</span></div>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-3xl">
+                    <div class="text-xs font-bold text-gray-400 mb-1">電話ボタン</div>
+                    <div class="text-2xl font-black">182 <span class="text-xs">回</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Search Keywords -->
+        <div class="story-card">
+            <div class="step-badge">STEP 2: ホームページに流入するきっかけ</div>
+            <h2 class="text-xl font-black mb-2">ホームページでよく検索された言葉</h2>
+            <p class="text-sm text-gray-500 mb-6">Google検索でホームページが表示された検索語句のうち、上位5件を表示しています。</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>検索ワード</th>
+                        <th class="text-right">見られた回数</th>
+                        <th class="text-right">順位</th>
+                    </tr>
+                </thead>
+                <tbody id="keywordTable">
+                    <!-- JS Data -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 3: GBP Queries -->
+        <div class="story-card">
+            <div class="step-badge">STEP 3: Googleマップで見つかるきっかけ</div>
+            <h2 class="text-xl font-black mb-2">Googleマップでよく検索された言葉</h2>
+            <p class="text-sm text-gray-500 mb-6">Googleビジネスプロフィールで表示につながった検索語句のうち、上位5件を表示しています。</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>検索ワード</th>
+                        <th class="text-right">表示回数</th>
+                    </tr>
+                </thead>
+                <tbody id="gbpQueryTable">
+                    <!-- JS Data -->
+                </tbody>
+            </table>
+        </div>
+
+        
+
+        <!-- Section 4: Map -->
+        <div class="story-card">
+            <div class="step-badge">STEP 4: Googleマップから行動する</div>
+            <h2 class="text-xl font-black mb-2 text-gray-800">Googleマップでの反応</h2>
+            <p class="text-sm text-gray-500 mb-8">GoogleマップやGoogleビジネスプロフィールを見たお客様のうち、実際に道案内や電話につながった数です。</p>
+            
+            <div class="chart-wrapper mb-8">
+                <canvas id="mapChart"></canvas>
+            </div>
+
+            <div class="flex flex-col space-y-4">
+                <div class="flex items-center p-4 bg-red-50 rounded-2xl border-2 border-brand">
+                    <div class="icon-circle bg-brand text-white text-2xl mr-4">📍</div>
+                    <div>
+                        <div class="text-[10px] font-black text-brand uppercase">Route Requests</div>
+                        <div class="text-xl font-black">道案内を調べた人：1,204 人</div>
+                    </div>
+                </div>
+                <div class="flex items-center p-4 bg-gray-50 rounded-2xl">
+                    <div class="icon-circle bg-gray-200 text-gray-600 text-2xl mr-4">📞</div>
+                    <div>
+                        <div class="text-[10px] font-black text-gray-400 uppercase">Direct Calls</div>
+                        <div class="text-xl font-black">電話をかけた人：145 人</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Reviews -->
+        <div class="story-card">
+            <div class="step-badge">STEP 5: お店の評判</div>
+            <h2 class="text-xl font-black mb-6">口コミの評価と推移</h2>
+            
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex flex-col">
+                    <div class="text-4xl font-black text-gray-800">4.8 <span class="text-sm text-gray-400 font-bold">/ 5.0</span></div>
+                    <div class="text-yellow-400 text-lg">★★★★★</div>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-gray-400 font-bold">累計の口コミ数</p>
+                    <p class="text-2xl font-black">248 <span class="text-sm">件</span></p>
+                </div>
+            </div>
+
+            <div class="chart-wrapper h-24">
+                <canvas id="reviewChart"></canvas>
+            </div>
+        </div>
+
+
+
+        <!-- Section 3: AI -->
+        <div class="story-card bg-slate-900 text-white">
+            <div class="step-badge">STEP 6: AIでの見られ方</div>
+            <h2 class="text-xl font-black mb-2 text-white">AIによる紹介状況</h2>
+            <p class="text-sm text-slate-400 mb-8">ChatGPTなどのAIが「おすすめのお店」として紹介した実績です。</p>
+            
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <div class="text-xs font-bold text-slate-500 mb-1">AIが紹介した順位</div>
+                    <div class="text-3xl font-black text-brand">2.1 <span class="text-sm text-white">位</span></div>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs font-bold text-slate-500 mb-1">紹介からの閲覧数</div>
+                    <div class="text-3xl font-black text-white">1,250 <span class="text-sm text-slate-400">回</span></div>
+                </div>
+            </div>
+            
+            <div class="chart-wrapper h-32">
+                <canvas id="aiChart"></canvas>
+            </div>
+        </div>
+
+
+        <!-- Footer -->
+        <footer class="text-center py-12">
+            <p class="text-xs text-gray-400 font-bold mb-4 tracking-widest uppercase">C-mo Digital Marketing Support</p>
+            <div class="w-12 h-1 bg-brand mx-auto rounded-full"></div>
+            <p class="text-[10px] text-gray-300 mt-6 leading-relaxed">
+                ※このレポートはGoogle等の公式データを元に作成されています。<br>
+                © 2024 C-mo Analysis.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+        const brandRed = '#DE0A0A';
+        Chart.defaults.font.family = "'M PLUS Rounded 1c', sans-serif";
+        Chart.defaults.color = '#a0aec0';
+
+        // 1. Site Chart
+        new Chart(document.getElementById('siteChart'), {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: '予約・電話の合計',
+                    data: [460, 510, 610, 555, 580, 635, 700, 730, 620, 665, 630, 640],
+                    borderColor: brandRed,
+                    borderWidth: 6,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    fill: true,
+                    backgroundColor: 'rgba(222, 10, 10, 0.05)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { 
+                    y: { display: true, border: { display: false }, grid: { color: '#f7fafc' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 2. Keyword Table
+        const keywords = [
+            { q: '地域名 イタリアン', count: 12400, pos: '2位' },
+            { q: '近くのパスタ', count: 8500, pos: '3位' },
+            { q: 'おしゃれ カフェ', count: 4200, pos: '2位' },
+            { q: '誕生日 ディナー', count: 3800, pos: '4位' },
+            { q: '記念日 個室', count: 1200, pos: '1位' }
+        ];
+        const kBody = document.getElementById('keywordTable');
+        keywords.forEach(k => {
+            kBody.innerHTML += `<tr>
+                <td class="font-black text-gray-700">${k.q}</td>
+                <td class="text-right font-bold">${k.count.toLocaleString()}回</td>
+                <td class="text-right font-black text-brand">${k.pos}</td>
+            </tr>`;
+        });
+
+
+        // 3. GBP Query Table
+        const gbpQueries = [
+            { q: '地域名 イタリアン', count: 18200 },
+            { q: '近くのレストラン', count: 14300 },
+            { q: 'ランチ 人気', count: 8600 },
+            { q: '記念日 ディナー', count: 5200 },
+            { q: 'パスタ おすすめ', count: 3100 }
+        ];
+        const gBody = document.getElementById('gbpQueryTable');
+        gbpQueries.forEach(k => {
+            gBody.innerHTML += `<tr>
+                <td class="font-black text-gray-700">${k.q}</td>
+                <td class="text-right font-bold">${k.count.toLocaleString()}回</td>
+            </tr>`;
+        });
+
+        // 4. AI Rank
+        new Chart(document.getElementById('aiChart'), {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    data: [15, 14, 12, 11, 8, 6, 5, 4, 3, 3, 2.5, 2.1],
+                    borderColor: brandRed,
+                    borderWidth: 4,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { reverse: true, display: false }, x: { display: false } }
+            }
+        });
+
+        // 5. Map Chart
+        new Chart(document.getElementById('mapChart'), {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: '道案内',
+                    data: [850, 920, 1100, 1050, 1150, 1300, 1450, 1600, 1200, 1350, 1250, 1204],
+                    backgroundColor: brandRed,
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { display: true, border: { display: false } }, x: { grid: { display: false } } }
+            }
+        });
+
+        // 6. Review Chart
+        new Chart(document.getElementById('reviewChart'), {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    data: [180, 185, 192, 201, 210, 218, 225, 230, 235, 240, 245, 248],
+                    borderColor: '#ecc94b',
+                    borderWidth: 3,
+                    fill: true,
+                    backgroundColor: 'rgba(236, 201, 75, 0.1)',
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { display: false }, x: { display: false } }
+            }
+        });
+    </script>
+</body>
+</html>
